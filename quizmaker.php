@@ -3,7 +3,7 @@
 Plugin Name: QuizMaker
 Description: サブコンテンツ型・診断投稿＆回答プラグイン（WordPress標準ユーザー対応）
 Version: 0.1
-Author: げるのGPT
+Author: silicagel
 */
 if (!defined('ABSPATH')) exit;
 
@@ -63,19 +63,56 @@ add_shortcode('quizmaker_list', function () {
         'orderby'        => 'date',
         'order'          => 'DESC'
     ]);
+    
+    // 統計データを取得
+    global $wpdb;
+    $quiz_stats = [];
+    $user_logs = $wpdb->get_results("
+        SELECT meta_value 
+        FROM {$wpdb->usermeta} 
+        WHERE meta_key = 'quiz_correct_log'
+    ");
+    
+    foreach ($user_logs as $log_row) {
+        $log = maybe_unserialize($log_row->meta_value);
+        if (is_array($log)) {
+            foreach ($log as $quiz_id => $result) {
+                if (!isset($quiz_stats[$quiz_id])) {
+                    $quiz_stats[$quiz_id] = ['attempts' => 0, 'correct' => 0];
+                }
+                $quiz_stats[$quiz_id]['attempts']++;
+                if ($result) $quiz_stats[$quiz_id]['correct']++;
+            }
+        }
+    }
+    
     ob_start();
-    echo '<h2>診断一覧</h2>';
+    echo '<div style="max-width:600px; margin:0 auto; padding:20px;">';
+    echo '<h2>📝 診断一覧</h2>';
     if ($q->have_posts()) {
-        echo '<ul>';
+        echo '<div style="display:grid; gap:15px;">';
         while ($q->have_posts()) {
             $q->the_post();
-            $url = add_query_arg('quiz_id', get_the_ID(), '/quiz-detail/');
-            echo '<li><a href="'.$url.'">'.esc_html(get_the_title()).'</a>（作成者: '.get_the_author().')</li>';
+            $quiz_id = get_the_ID();
+            $url = add_query_arg('quiz_id', $quiz_id, '/quiz-detail/');
+            $stats = isset($quiz_stats[$quiz_id]) ? $quiz_stats[$quiz_id] : ['attempts' => 0, 'correct' => 0];
+            $accuracy = $stats['attempts'] > 0 ? round(($stats['correct'] / $stats['attempts']) * 100, 1) : 0;
+            
+            echo '<div style="border:1px solid #ddd; padding:15px; border-radius:8px; background:white; box-shadow:0 2px 4px rgba(0,0,0,0.1);">';
+            echo '<h3 style="margin:0 0 10px 0;"><a href="'.$url.'" style="text-decoration:none; color:#333;">'.esc_html(get_the_title()).'</a></h3>';
+            echo '<p style="margin:5px 0; color:#666; font-size:14px;">作成者: '.get_the_author().'</p>';
+            if ($stats['attempts'] > 0) {
+                echo '<p style="margin:5px 0; color:#666; font-size:14px;">👥 '.$stats['attempts'].'人が挑戦 | 🎯 正答率 '.$accuracy.'%</p>';
+            } else {
+                echo '<p style="margin:5px 0; color:#999; font-size:14px;">まだ挑戦者がいません</p>';
+            }
+            echo '</div>';
         }
-        echo '</ul>';
+        echo '</div>';
     } else {
-        echo 'まだ診断がありません。';
+        echo '<p style="text-align:center; color:#666;">まだ診断がありません。</p>';
     }
+    echo '</div>';
     wp_reset_postdata();
     return ob_get_clean();
 });
@@ -120,17 +157,134 @@ add_shortcode('quizmaker_detail', function () {
     }
 
     ob_start();
-    ?>
-    <h2><?php echo esc_html($post->post_title); ?></h2>
-    <form method="post">
-        <?php
-        foreach ($choices as $i => $choice) {
-            echo '<label><input type="radio" name="selected" value="'.($i+1).'" required> '.esc_html($choice).'</label><br>';
+    
+    // この診断の統計を取得
+    global $wpdb;
+    $quiz_stats = ['attempts' => 0, 'correct' => 0];
+    $user_logs = $wpdb->get_results("
+        SELECT meta_value 
+        FROM {$wpdb->usermeta} 
+        WHERE meta_key = 'quiz_correct_log'
+    ");
+    
+    foreach ($user_logs as $log_row) {
+        $log = maybe_unserialize($log_row->meta_value);
+        if (is_array($log) && isset($log[$quiz_id])) {
+            $quiz_stats['attempts']++;
+            if ($log[$quiz_id]) $quiz_stats['correct']++;
         }
-        ?>
-        <button type="submit">回答する</button>
-    </form>
-    <?php echo $feedback; ?>
+    }
+    
+    $accuracy = $quiz_stats['attempts'] > 0 ? round(($quiz_stats['correct'] / $quiz_stats['attempts']) * 100, 1) : 0;
+    ?>
+    <div style="max-width:600px; margin:0 auto; padding:20px;">
+        <h2><?php echo esc_html($post->post_title); ?></h2>
+        
+        <?php if ($quiz_stats['attempts'] > 0): ?>
+            <div style="background:#f0f8ff; padding:10px; margin:15px 0; border-radius:5px; font-size:14px;">
+                📊 <strong><?php echo $quiz_stats['attempts']; ?>人</strong>が挑戦 | 
+                正答率 <strong><?php echo $accuracy; ?>%</strong>
+            </div>
+        <?php endif; ?>
+        
+        <form method="post" style="background:#f9f9f9; padding:20px; border-radius:8px; margin:20px 0;">
+            <?php
+            foreach ($choices as $i => $choice) {
+                echo '<label style="display:block; margin:10px 0; padding:10px; background:white; border-radius:5px; cursor:pointer;">';
+                echo '<input type="radio" name="selected" value="'.($i+1).'" required style="margin-right:10px;"> ';
+                echo esc_html($choice);
+                echo '</label>';
+            }
+            ?>
+            <button type="submit" style="background:#4CAF50; color:white; padding:12px 24px; border:none; border-radius:5px; font-size:16px; cursor:pointer; width:100%; margin-top:15px;">回答する</button>
+        </form>
+        
+        <?php echo $feedback; ?>
+    </div>
+    <?php
+    return ob_get_clean();
+});
+
+// ▼ ショートコード: 統計表示（全体統計と個人成績）
+add_shortcode('quizmaker_stats', function () {
+    ob_start();
+    ?>
+    <div style="max-width:600px; margin:0 auto; padding:20px;">
+        <h2>📊 診断統計</h2>
+        
+        <?php if (is_user_logged_in()): ?>
+            <div style="background:#f0f8ff; padding:15px; margin-bottom:20px; border-radius:8px;">
+                <h3>🎯 あなたの成績</h3>
+                <?php
+                $user_id = get_current_user_id();
+                $user_log = get_user_meta($user_id, 'quiz_correct_log', true) ?: [];
+                if (!empty($user_log)) {
+                    $total_attempts = count($user_log);
+                    $correct_count = array_sum($user_log);
+                    $accuracy = round(($correct_count / $total_attempts) * 100, 1);
+                    echo "<p>挑戦した診断数: <strong>{$total_attempts}問</strong></p>";
+                    echo "<p>正解数: <strong>{$correct_count}問</strong></p>";
+                    echo "<p>正答率: <strong>{$accuracy}%</strong></p>";
+                } else {
+                    echo "<p>まだ診断に挑戦していません。</p>";
+                }
+                ?>
+            </div>
+        <?php endif; ?>
+        
+        <div style="background:#f9f9f9; padding:15px; border-radius:8px;">
+            <h3>🏆 人気診断ランキング</h3>
+            <?php
+            // 全ユーザーの回答ログを集計
+            global $wpdb;
+            $quiz_stats = [];
+            
+            // すべてのユーザーのquiz_correct_logを取得
+            $user_logs = $wpdb->get_results("
+                SELECT meta_value 
+                FROM {$wpdb->usermeta} 
+                WHERE meta_key = 'quiz_correct_log'
+            ");
+            
+            foreach ($user_logs as $log_row) {
+                $log = maybe_unserialize($log_row->meta_value);
+                if (is_array($log)) {
+                    foreach ($log as $quiz_id => $result) {
+                        if (!isset($quiz_stats[$quiz_id])) {
+                            $quiz_stats[$quiz_id] = ['attempts' => 0, 'correct' => 0];
+                        }
+                        $quiz_stats[$quiz_id]['attempts']++;
+                        if ($result) $quiz_stats[$quiz_id]['correct']++;
+                    }
+                }
+            }
+            
+            // 挑戦数でソート
+            uasort($quiz_stats, function($a, $b) {
+                return $b['attempts'] - $a['attempts'];
+            });
+            
+            $rank = 1;
+            foreach (array_slice($quiz_stats, 0, 5, true) as $quiz_id => $stats) {
+                $quiz = get_post($quiz_id);
+                if ($quiz && $quiz->post_status === 'publish') {
+                    $accuracy = $stats['attempts'] > 0 ? round(($stats['correct'] / $stats['attempts']) * 100, 1) : 0;
+                    $url = add_query_arg('quiz_id', $quiz_id, '/quiz-detail/');
+                    echo "<div style='border-left:4px solid #4CAF50; padding:10px; margin:10px 0; background:white;'>";
+                    echo "<strong>{$rank}位</strong> ";
+                    echo "<a href='{$url}' style='text-decoration:none; color:#333;'>" . esc_html($quiz->post_title) . "</a><br>";
+                    echo "<small>挑戦者: {$stats['attempts']}人 | 正答率: {$accuracy}%</small>";
+                    echo "</div>";
+                    $rank++;
+                }
+            }
+            
+            if (empty($quiz_stats)) {
+                echo "<p>まだ統計データがありません。</p>";
+            }
+            ?>
+        </div>
+    </div>
     <?php
     return ob_get_clean();
 });
