@@ -1,0 +1,565 @@
+/* QuizMaker Plugin CSS - Modern Responsive Design */
+
+/* ====== 基本設定 ====== */
+.quizmaker-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #e2e8f0; /* ダークテーマベースの文字色 */
+    background: #1a202c; /* ダークな背景色 */
+}
+
+@media (max-width: 768px) {
+    .quizmaker-container {
+        padding: 15px;
+        max-width: 100%;
+    }
+}
+
+/* ====== タイトル・見出し ====== */
+.quizmaker-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #ffffff; /* 白色でコントラストを最大化 */
+    position: relative;
+}
+
+/* ::after要素による線は非表示
+.quizmaker-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+}
+*/
+
+@media (max-width: 480px) {
+    .quizmaker-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* ====== 標準HTMLタグの調整 ====== */
+.quizmaker-container h2,
+.quizmaker-container h3 {
+    color: #ffffff; /* 白色でコントラストを最大化 */
+    font-weight: 600;
+}
+
+/* ====== カード共通デザイン ====== */
+.quizmaker-card {
+    background: #2d3748; /* ダークな背景 */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+    padding: 24px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid #4a5568; /* ダークなボーダー */
+}
+
+.quizmaker-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 480px) {
+    .quizmaker-card {
+        padding: 16px;
+        border-radius: 8px;
+    }
+}
+
+/* ====== フォームデザイン ====== */
+.quizmaker-form {
+    background: #2d3748; /* ダークな背景 */
+    border-radius: 12px;
+    padding: 24px;
+    border: 2px solid #4a5568; /* ダークなボーダー */
+}
+
+.quizmaker-form-group {
+    margin-bottom: 20px;
+}
+
+.quizmaker-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #f7fafc; /* 明るい文字色 */
+    font-size: 0.9rem;
+}
+
+.quizmaker-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #4a5568;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #4a5568; /* ダークな背景 */
+    color: #e2e8f0; /* 明るい文字色 */
+    box-sizing: border-box;
+}
+
+.quizmaker-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.quizmaker-input:hover {
+    border-color: #718096;
+}
+
+/* ====== ボタンデザイン ====== */
+.quizmaker-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    min-height: 48px;
+}
+
+.quizmaker-btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+}
+
+.quizmaker-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.quizmaker-btn-primary:active {
+    transform: translateY(0);
+}
+
+.quizmaker-btn-full {
+    width: 100%;
+    margin-top: 16px;
+}
+
+.quizmaker-btn-danger {
+    background: #e53e3e;
+    color: white;
+    box-shadow: 0 4px 14px rgba(229, 62, 62, 0.3);
+}
+
+.quizmaker-btn-danger:hover {
+    background: #c53030;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4);
+}
+
+.quizmaker-btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-height: 32px;
+}
+
+@media (max-width: 480px) {
+    .quizmaker-btn {
+        padding: 14px 20px;
+        font-size: 16px;
+        min-height: 52px;
+    }
+}
+
+/* ====== グリッドレイアウト ====== */
+.quizmaker-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+@media (max-width: 480px) {
+    .quizmaker-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+/* ====== クイズリストアイテム ====== */
+.quizmaker-quiz-item {
+    background: #2d3748; /* ダークな背景 */
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #4a5568; /* ダークなボーダー */
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.quizmaker-quiz-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.quizmaker-quiz-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border-color: #718096;
+}
+
+.quizmaker-quiz-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: #f7fafc; /* 明るい文字色 */
+}
+
+.quizmaker-quiz-title a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+}
+
+.quizmaker-quiz-title a:hover {
+    color: #667eea;
+}
+
+/* 回答済み問題のスタイル */
+.quizmaker-quiz-title.quizmaker-answered {
+    opacity: 0.8; /* 少し薄く */
+}
+
+.quizmaker-quiz-title.quizmaker-answered a {
+    color: #a0aec0 !important; /* ダークテーマに適した薄い色 */
+}
+
+/* リンクが他のプラグインによって変換されることを防ぐ */
+.quizmaker-quiz-link {
+    display: inline !important;
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+.quizmaker-quiz-link:hover {
+    color: #667eea !important;
+}
+
+.quizmaker-quiz-meta {
+    font-size: 0.85rem;
+    color: #cbd5e0; /* ダークテーマに適した明るい色 */
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.quizmaker-quiz-stats {
+    font-size: 0.85rem;
+    color: #cbd5e0; /* ダークテーマに適した明るい色 */
+    margin: 8px 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+    .quizmaker-quiz-item {
+        padding: 16px;
+    }
+    
+    .quizmaker-quiz-title {
+        font-size: 1.1rem;
+    }
+    
+    .quizmaker-quiz-stats {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}
+
+/* ====== クイズ詳細ページ ====== */
+.quizmaker-quiz-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.quizmaker-quiz-question {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #ffffff; /* 白色でコントラストを最大化 */
+    margin-bottom: 16px;
+}
+
+.quizmaker-stats-box {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); /* ダークなグラデーション */
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    text-align: center;
+    font-size: 0.9rem;
+    border: 1px solid #718096;
+    color: #ffffff; /* 白色でコントラストを最大化 */
+    font-weight: 600; /* 太字にして視認性を向上 */
+}
+
+/* ====== 選択肢 ====== */
+.quizmaker-choices {
+    background: #2d3748; /* ダークな背景 */
+    padding: 24px;
+    border-radius: 12px;
+    margin: 24px 0;
+    border: 1px solid #4a5568; /* ダークなボーダー */
+}
+
+.quizmaker-choice {
+    display: block;
+    margin: 12px 0;
+    padding: 16px;
+    background: #4a5568; /* ダークな背景 */
+    border: 2px solid #718096;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    color: #e2e8f0; /* 明るい文字色 */
+}
+
+.quizmaker-choice:hover {
+    border-color: #667eea;
+    background: #718096; /* ダークテーマに適したホバー色 */
+    transform: translateX(4px);
+}
+
+.quizmaker-choice input[type="radio"] {
+    margin-right: 12px;
+    transform: scale(1.2);
+}
+
+.quizmaker-choice input[type="radio"]:checked + label,
+.quizmaker-choice:has(input[type="radio"]:checked) {
+    border-color: #667eea;
+    background: #667eea; /* ダークテーマに適した選択状態の背景色 */
+    color: #ffffff; /* 白い文字で高コントラスト */
+    font-weight: 600;
+}
+
+@media (max-width: 480px) {
+    .quizmaker-choices {
+        padding: 16px;
+    }
+    
+    .quizmaker-choice {
+        padding: 14px;
+        margin: 10px 0;
+    }
+}
+
+/* ====== フィードバック・アラート ====== */
+.quizmaker-feedback {
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-weight: 500;
+    text-align: center;
+}
+
+.quizmaker-feedback.success {
+    background: #2d5016; /* ダークグリーン */
+    color: #c6f6d5; /* 明るいグリーン */
+    border: 1px solid #38a169;
+}
+
+.quizmaker-feedback.error {
+    background: #742a2a; /* ダークレッド */
+    color: #fed7d7; /* 明るいレッド */
+    border: 1px solid #e53e3e;
+}
+
+.quizmaker-feedback.info {
+    background: #2a4365; /* ダークブルー */
+    color: #bee3f8; /* 明るいブルー */
+    border: 1px solid #3182ce;
+}
+
+/* ====== 統計・ランキング ====== */
+.quizmaker-stats-section {
+    background: #2d3748; /* ダークな背景 */
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border: 1px solid #4a5568; /* ダークなボーダー */
+}
+
+.quizmaker-stats-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #ffffff; /* 白色でコントラストを最大化 */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quizmaker-personal-stats {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); /* ダークなグラデーション */
+    border: 1px solid #718096;
+}
+
+.quizmaker-ranking-item {
+    border-left: 4px solid #667eea;
+    padding: 16px;
+    margin: 12px 0;
+    background: #4a5568; /* ダークな背景 */
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.quizmaker-ranking-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.quizmaker-ranking-number {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.quizmaker-ranking-title a {
+    text-decoration: none;
+    color: #f7fafc; /* 明るい文字色 */
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.quizmaker-ranking-title a:hover {
+    color: #667eea;
+}
+
+.quizmaker-ranking-meta {
+    font-size: 0.85rem;
+    color: #cbd5e0; /* ダークテーマに適した明るい色 */
+    margin-top: 4px;
+}
+
+@media (max-width: 480px) {
+    .quizmaker-stats-section {
+        padding: 16px;
+    }
+    
+    .quizmaker-ranking-item {
+        padding: 12px;
+    }
+}
+
+/* ====== エンプティステート ====== */
+.quizmaker-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #cbd5e0; /* ダークテーマに適した明るい色に変更 */
+    font-size: 1rem;
+}
+
+.quizmaker-empty::before {
+    content: '📝';
+    display: block;
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+/* ====== ローディング・アニメーション ====== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.quizmaker-card,
+.quizmaker-quiz-item {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* ====== ユーティリティクラス ====== */
+.quizmaker-text-center {
+    text-align: center;
+}
+
+.quizmaker-text-muted {
+    color: #a0aec0; /* ダークテーマに適した薄い色 */
+}
+
+/* 小さいテキストのコントラスト改善 */
+.quizmaker-container small {
+    color: #cbd5e0 !important; /* ダークテーマに適した明るい色 */
+}
+
+/* 回答済み通知ボックスのスタイル改善 */
+.quizmaker-container div[style*="background:#f0f8ff"] {
+    background: #4a5568 !important; /* ダークな背景に変更 */
+    color: #ffffff !important; /* 白い文字 */
+    border-left-color: #667eea !important; /* 青いボーダー */
+}
+
+.quizmaker-container div[style*="background:#f0f8ff"] small {
+    color: #e2e8f0 !important; /* 明るい小さい文字 */
+}
+
+.quizmaker-mt-2 {
+    margin-top: 16px;
+}
+
+.quizmaker-mb-2 {
+    margin-bottom: 16px;
+}
+
+.quizmaker-p-0 {
+    padding: 0;
+}
+
+/* ====== アクセシビリティ ====== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ====== フォーカス表示 ====== */
+.quizmaker-input:focus,
+.quizmaker-btn:focus,
+.quizmaker-choice:focus-within {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* ====== ダークモード対応削除 - ダークテーマをベースに ====== */
